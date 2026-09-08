@@ -1,0 +1,59 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans;
+  }
+
+  :lang(ne) {
+    font-family:
+      "IBM Plex Sans Devanagari",
+      "IBM Plex Sans",
+      system-ui,
+      sans-serif;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display text-ink;
+  }
+
+  a {
+    @apply underline-offset-2;
+  }
+
+  *:focus-visible {
+    outline: 2px solid #1F3A3D;
+    outline-offset: 3px;
+  }
+}
+
+@layer utilities {
+  .path-divider {
+    background-image:
+      radial-gradient(
+        circle,
+        rgba(221, 214, 198, 0.7) 1px,
+        transparent 1px
+      );
+    background-size: 12px 12px;
+  }
+}
+
+.leaflet-container {
+  font-family:
+    "IBM Plex Sans",
+    system-ui,
+    sans-serif;
+  border-radius: 0.75rem;
+}
+
