@@ -237,7 +237,7 @@ export default function Home() {
             onSubmit={handleSubmit}
             className="
         group
-        mx-auto mt-10
+        mx-auto mt-8
         flex w-full max-w-2xl
         flex-col gap-2
         rounded-[22px]
@@ -335,7 +335,7 @@ export default function Home() {
             onClick={() => navigate("/services")}
             className="
     group/explore
-    mt-10
+    mt-8
     inline-flex
     items-center
     gap-2
