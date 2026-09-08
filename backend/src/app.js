@@ -8,6 +8,13 @@ import { notFoundHandler, errorHandler } from './middleware/error.middleware.js'
 export function createApp() {
   const app = express();
 
+  app.get("/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "SewaPath API is running"
+  });
+});
+
   app.use(cors({ origin: process.env.CLIENT_ORIGIN?.split(',') || '*', credentials: true }));
   app.use(express.json({ limit: '1mb' }));
   app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
