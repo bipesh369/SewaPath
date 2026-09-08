@@ -1,4 +1,4 @@
-# SewaPath 🇳🇵
+# SewaPath
 
 > **Making government services easier to discover, understand, and navigate.**
 
@@ -10,7 +10,7 @@ The platform is designed with a **citizen-first approach**, with support for bot
 
 ---
 
-## ✨ Why SewaPath?
+##  Why SewaPath?
 
 Finding information about government services can be difficult when information is distributed across different sources and presented in complicated formats.
 
@@ -30,9 +30,9 @@ SewaPath brings these pieces together into a single service-discovery experience
 
 ---
 
-## 🚀 Core Features
+##  Core Features
 
-### 🔎 Service Discovery
+###  Service Discovery
 
 Discover government services through:
 
@@ -43,7 +43,7 @@ Discover government services through:
 
 The backend exposes dedicated service APIs for searching and discovering services.
 
-### 📋 Service Details
+###  Service Details
 
 Each service can provide:
 
@@ -55,7 +55,7 @@ Each service can provide:
 
 This turns a government service from a simple information page into an actionable journey.
 
-### ✅ Eligibility Checking
+###  Eligibility Checking
 
 Users can answer service-specific eligibility questions and receive an eligibility result.
 
@@ -65,7 +65,7 @@ The backend provides a dedicated eligibility resource:
 /api/services/:id/eligibility
 ```
 
-### 📄 Document Checklist
+###  Document Checklist
 
 Users can see the documents required for a particular service.
 
@@ -75,7 +75,7 @@ Users can see the documents required for a particular service.
 
 This is intended to reduce uncertainty before visiting a government office.
 
-### 🧭 Step-by-Step Service Journey
+###  Step-by-Step Service Journey
 
 Services can contain structured journey steps that guide citizens through the process.
 
@@ -83,11 +83,11 @@ Services can contain structured journey steps that guide citizens through the pr
 /api/services/:id/journey
 ```
 
-### 🏢 Government Office Directory
+###  Government Office Directory
 
 SewaPath connects services with responsible government offices and provides an office map using **Leaflet / React-Leaflet** and OpenStreetMap-based mapping.
 
-### 🔐 Authentication
+###  Authentication
 
 The application supports:
 
@@ -100,7 +100,7 @@ The application supports:
 
 The backend uses JWT, bcrypt, and authorization middleware to protect resources.
 
-### ⭐ Saved Services
+###  Saved Services
 
 Authenticated citizens can bookmark services and access them from their dashboard.
 
@@ -108,7 +108,7 @@ Authenticated citizens can bookmark services and access them from their dashboar
 /api/saved-services
 ```
 
-### 👤 Role-Based Access
+###  Role-Based Access
 
 SewaPath currently defines two primary roles:
 
@@ -117,7 +117,7 @@ SewaPath currently defines two primary roles:
 | `citizen` | Discover services, check eligibility, view requirements, save services, use personal dashboard |
 | `admin`   | Manage services, categories, offices, eligibility rules, documents, and journey steps          |
 
-### 🌐 English + Nepali
+###  English + Nepali
 
 SewaPath is designed as a bilingual platform.
 
@@ -127,7 +127,7 @@ The frontend also provides English and Nepali UI content and remembers the selec
 
 ---
 
-# 🏗️ Architecture
+#  Architecture
 
 SewaPath follows a separated full-stack architecture:
 
@@ -176,7 +176,7 @@ This separation keeps HTTP routing, business operations, data models, and author
 
 ---
 
-# 🛠️ Tech Stack
+#  Tech Stack
 
 ## Frontend
 
@@ -207,7 +207,7 @@ This separation keeps HTTP routing, business operations, data models, and author
 
 ---
 
-# 📁 Project Structure
+#  Project Structure
 
 ```text
 SewaPath/
@@ -298,7 +298,7 @@ The structure reflects the actual repository organization rather than a generic 
 
 ---
 
-# 🔌 API Overview
+#  API Overview
 
 The backend exposes REST resources organized around the application's domain.
 
@@ -321,7 +321,7 @@ frontend/src/api/
 
 ---
 
-# 🔄 Typical User Journey
+#  Typical User Journey
 
 ```text
 Discover a service
@@ -352,7 +352,7 @@ This is the central product flow of SewaPath.
 
 ---
 
-# 🗄️ Data Model
+#  Data Model
 
 SewaPath uses MongoDB with Mongoose.
 
@@ -378,7 +378,7 @@ A reusable bilingual schema supports English and Nepali content across the servi
 
 ---
 
-# 🌐 Internationalization
+#  Internationalization
 
 SewaPath treats bilingual support as part of the data model, not simply as a frontend translation layer.
 
@@ -399,7 +399,7 @@ The frontend contains dedicated internationalization resources and a language co
 
 ---
 
-# 🔐 Security
+#  Security
 
 The backend includes several security-related mechanisms:
 
@@ -421,7 +421,7 @@ Use the provided `.env.example` files as templates.
 
 ---
 
-# ⚙️ Local Development
+#  Local Development
 
 ## Prerequisites
 
@@ -511,7 +511,7 @@ The available scripts are defined in the backend package configuration.
 
 ---
 
-# 💻 Start the Frontend
+#  Start the Frontend
 
 Open another terminal:
 
@@ -548,7 +548,7 @@ http://localhost:5173
 
 ---
 
-# 🧪 Production Build
+#  Production Build
 
 Build the frontend:
 
@@ -571,7 +571,7 @@ npm run lint
 
 ---
 
-# 📦 Deployment Architecture
+#  Deployment Architecture
 
 SewaPath is structured so that the frontend, backend, and database can be deployed independently.
 
@@ -641,7 +641,7 @@ This structure makes the project useful not only as an application, but also as 
 
 ---
 
-# 🗺️ Roadmap
+#  Roadmap
 
 Potential areas for future development include:
 
@@ -665,7 +665,7 @@ Potential areas for future development include:
 
 ---
 
-# 🤝 Contributing
+#  Contributing
 
 Contributions, suggestions, and improvements are welcome.
 
@@ -718,7 +718,7 @@ Explain:
 
 ---
 
-# 📌 Project Status
+#  Project Status
 
 SewaPath is an actively developed project.
 
@@ -728,7 +728,7 @@ The project should be considered a **work in progress** rather than a finished p
 
 ---
 
-# 📄 License
+#  License
 
 A project license is not currently documented at the repository root.
 
@@ -736,7 +736,7 @@ Add an appropriate `LICENSE` file before presenting SewaPath as an open-source p
 
 ---
 
-# 👨‍💻 Author
+#  Author
 
 **Bipesh Junior**
 
@@ -749,7 +749,7 @@ Building SewaPath as a practical project to learn and apply real-world software 
 
 ---
 
-## ⭐ Support the Project
+##  Support the Project
 
 If you find SewaPath interesting or useful, consider giving the repository a ⭐ on GitHub.
 
