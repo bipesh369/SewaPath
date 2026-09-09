@@ -17,30 +17,44 @@ export const translations = {
     },
 
     home: {
-      heroTitle: "Tell us what you need. We’ll guide you through the process.",
-      heroSubtitle:
-        "Describe what you need. SewaPath finds the service, office, documents, and steps.",
-      heroPlaceholder: "What government service can we help you with?",
-      heroButton: "Find a service",
-      orBrowse: "Browse services by category",
-      browseServices: "Explore all services",
-      popularServices: "Popular services",
-      popularServicesSubtitle: "Explore the services people use most.",
+  eyebrow: "Find the Right Government Service",
 
-      howItWorks: "How it works",
+  heroTitle:
+    "Tell us what you need. We’ll guide you through the process.",
 
-      step1Title: "Tell us what you need",
-      step1Body:
-        "Search in plain Nepali or English. No need to know the office name.",
+  heroSubtitle:
+    "Describe what you need. SewaPath finds the service, office, documents, and steps.",
 
-      step2Title: "Check eligibility & documents",
-      step2Body:
-        "Answer a few simple questions and see exactly what you need to bring.",
+  heroPlaceholder: "What government service can we help you with?",
+  heroButton: "Find a service",
 
-      step3Title: "Follow your path",
-      step3Body:
-        "Find the responsible office, its location, and the official link.",
-    },
+  orBrowse: "Browse services by category",
+  browseServices: "Explore all services",
+
+  servicesCount: "312+ government services",
+  provincesCount: "All 7 provinces",
+
+  popularServices: "Popular services",
+  popularServicesSubtitle: "Explore the services people use most.",
+
+  browseByCategory: "Browse by category",
+  categorySubtitle: "Explore services based on what you need.",
+  exploreServices: "Explore services",
+
+  howItWorks: "How it works",
+
+  step1Title: "Tell us what you need",
+  step1Body:
+    "Search in plain Nepali or English. No need to know the office name.",
+
+  step2Title: "Check eligibility & documents",
+  step2Body:
+    "Answer a few simple questions and see exactly what you need to bring.",
+
+  step3Title: "Follow your path",
+  step3Body:
+    "Find the responsible office, its location, and the official link.",
+},
 
     services: {
       title: "All services",
@@ -136,30 +150,44 @@ export const translations = {
     },
 
     home: {
-      heroTitle:
-        "तपाईंलाई के चाहिएको हो भन्नुहोस्। हामी सही प्रक्रिया देखाउँछौं।",
-      heroSubtitle:
-        "आफ्नै शब्दमा लेख्नुहोस्। सेवापथले सही सेवा, कार्यालय, कागजात र चरणहरू पत्ता लगाउन मद्दत गर्छ।",
-      heroPlaceholder: "तपाईंलाई कुन सरकारी सेवा चाहिन्छ?",
-      heroButton: "सेवा खोज्नुहोस्",
-      orBrowse: "वर्गअनुसार सेवा खोज्नुहोस्",
-      browseServices: "सबै सेवाहरू हेर्नुहोस्",
-      popularServices: "लोकप्रिय सेवाहरू",
-      popularServicesSubtitle: "मानिसहरूले धेरै प्रयोग गर्ने सेवाहरू हेर्नुहोस्।",
+  eyebrow: "सही सरकारी सेवा खोज्नुहोस्",
 
-      howItWorks: "यसरी काम गर्छ",
+  heroTitle:
+    "तपाईंलाई के चाहिएको हो भन्नुहोस्। हामी सही प्रक्रिया देखाउँछौं।",
 
-      step1Title: "तपाईंलाई के चाहिन्छ भन्नुहोस्",
-      step1Body:
-        "नेपाली वा अंग्रेजीमा खोज्नुहोस्। कार्यालयको नाम थाहा हुनुपर्दैन।",
+  heroSubtitle:
+    "आफ्नै शब्दमा लेख्नुहोस्। सेवापथले सही सेवा, कार्यालय, कागजात र चरणहरू पत्ता लगाउन मद्दत गर्छ।",
 
-      step2Title: "योग्यता र कागजात जाँच्नुहोस्",
-      step2Body:
-        "केही सरल प्रश्नको जवाफ दिनुहोस् र आवश्यक कागजात थाहा पाउनुहोस्।",
+  heroPlaceholder: "तपाईंलाई कुन सरकारी सेवा चाहिन्छ?",
+  heroButton: "सेवा खोज्नुहोस्",
 
-      step3Title: "आफ्नो प्रक्रिया पूरा गर्नुहोस्",
-      step3Body: "सम्बन्धित कार्यालय, यसको स्थान र आधिकारिक लिंक पाउनुहोस्।",
-    },
+  orBrowse: "वर्गअनुसार सेवा खोज्नुहोस्",
+  browseServices: "सबै सेवाहरू हेर्नुहोस्",
+
+  servicesCount: "३१२+ सरकारी सेवाहरू",
+  provincesCount: "सबै ७ प्रदेश",
+
+  popularServices: "लोकप्रिय सेवाहरू",
+  popularServicesSubtitle: "मानिसहरूले धेरै प्रयोग गर्ने सेवाहरू हेर्नुहोस्।",
+
+  browseByCategory: "वर्गअनुसार हेर्नुहोस्",
+  categorySubtitle: "तपाईंलाई आवश्यक सेवाअनुसार खोज्नुहोस्।",
+  exploreServices: "सेवाहरू हेर्नुहोस्",
+
+  howItWorks: "यसरी काम गर्छ",
+
+  step1Title: "तपाईंलाई के चाहिन्छ भन्नुहोस्",
+  step1Body:
+    "नेपाली वा अंग्रेजीमा खोज्नुहोस्। कार्यालयको नाम थाहा हुनुपर्दैन।",
+
+  step2Title: "योग्यता र कागजात जाँच्नुहोस्",
+  step2Body:
+    "केही सरल प्रश्नको जवाफ दिनुहोस् र आवश्यक कागजात थाहा पाउनुहोस्।",
+
+  step3Title: "आफ्नो प्रक्रिया पूरा गर्नुहोस्",
+  step3Body:
+    "सम्बन्धित कार्यालय, यसको स्थान र आधिकारिक लिंक पाउनुहोस्।",
+},
 
     services: {
       title: "सबै सेवाहरू",

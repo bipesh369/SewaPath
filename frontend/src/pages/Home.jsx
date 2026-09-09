@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import {
   ArrowRight,
   Briefcase,
@@ -16,6 +17,7 @@ import {
 
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../i18n/translations.js";
+
 import { listCategories } from "../api/categories.api.js";
 import { listServices } from "../api/services.api.js";
 
@@ -53,8 +55,10 @@ export default function Home() {
 
   const [goal, setGoal] = useState("");
   const [goalError, setGoalError] = useState(false);
+
   const [categories, setCategories] = useState([]);
   const [popularServices, setPopularServices] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -82,7 +86,9 @@ export default function Home() {
         const services = svcRes.services || [];
 
         const selectedPopularServices = popularSlugs
-          .map((slug) => services.find((service) => service.slug === slug))
+          .map((slug) =>
+            services.find((service) => service.slug === slug)
+          )
           .filter(Boolean);
 
         setPopularServices(selectedPopularServices);
@@ -126,144 +132,183 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* ================= PREMIUM HERO ================= */}
+
       <section className="relative isolate overflow-hidden border-b border-line">
         {/* Premium background */}
+
         <div
           className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
           aria-hidden="true"
         >
           {/* Main ambient gradient */}
+
           <div
             className="
-      absolute inset-0
-      bg-[radial-gradient(ellipse_80%_60%_at_50%_35%,rgba(245,158,11,0.11),transparent_65%)]
-    "
+              absolute inset-0
+              bg-[radial-gradient(ellipse_80%_60%_at_50%_35%,rgba(245,158,11,0.11),transparent_65%)]
+            "
           />
 
           {/* Warm top-left light */}
+
           <div
             className="
-      absolute -left-[15%] -top-[20%]
-      h-[650px] w-[750px]
-      rotate-[-12deg]
-      bg-[radial-gradient(ellipse_at_center,rgba(245,158,11,0.14),transparent_68%)]
-      blur-3xl
-    "
+              absolute -left-[15%] -top-[20%]
+              h-[650px] w-[750px]
+              rotate-[-12deg]
+              bg-[radial-gradient(ellipse_at_center,rgba(245,158,11,0.14),transparent_68%)]
+              blur-3xl
+            "
           />
 
           {/* Soft right-side light */}
+
           <div
             className="
-      absolute -right-[18%] top-[10%]
-      h-[650px] w-[700px]
-      rotate-[20deg]
-      bg-[radial-gradient(ellipse_at_center,rgba(15,23,42,0.055),transparent_68%)]
-      blur-3xl
-    "
+              absolute -right-[18%] top-[10%]
+              h-[650px] w-[700px]
+              rotate-[20deg]
+              bg-[radial-gradient(ellipse_at_center,rgba(15,23,42,0.055),transparent_68%)]
+              blur-3xl
+            "
           />
 
           {/* Bottom warm atmosphere */}
+
           <div
             className="
-      absolute bottom-[-30%] left-[25%]
-      h-[500px] w-[800px]
-      bg-[radial-gradient(ellipse_at_center,rgba(245,158,11,0.07),transparent_70%)]
-      blur-3xl
-    "
+              absolute bottom-[-30%] left-[25%]
+              h-[500px] w-[800px]
+              bg-[radial-gradient(ellipse_at_center,rgba(245,158,11,0.07),transparent_70%)]
+              blur-3xl
+            "
           />
 
           {/* Subtle architectural grid */}
+
           <div
             className="
-      absolute inset-0
-      opacity-[0.028]
-      [background-image:linear-gradient(rgba(15,23,42,1)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,1)_1px,transparent_1px)]
-      [background-size:72px_72px]
-    "
+              absolute inset-0
+              opacity-[0.028]
+              [background-image:linear-gradient(rgba(15,23,42,1)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,1)_1px,transparent_1px)]
+              [background-size:72px_72px]
+            "
           />
 
           {/* Soft directional highlight */}
+
           <div
             className="
-      absolute left-1/2 top-0
-      h-[220px] w-[900px]
-      -translate-x-1/2
-      bg-[linear-gradient(180deg,rgba(255,255,255,0.65),transparent)]
-      blur-2xl
-    "
+              absolute left-1/2 top-0
+              h-[220px] w-[900px]
+              -translate-x-1/2
+              bg-[linear-gradient(180deg,rgba(255,255,255,0.65),transparent)]
+              blur-2xl
+            "
           />
         </div>
 
         {/* Hero */}
-        <div className="mx-auto flex min-h-[calc(100vh-72px)] max-w-6xl flex-col items-center justify-center px-5 py-16 text-center sm:py-20 lg:py-24">
+
+        <div
+          className="
+            mx-auto flex min-h-[calc(100vh-72px)]
+            max-w-6xl
+            -translate-y-4
+            flex-col items-center justify-center
+            px-5 py-16
+            text-center
+            sm:-translate-y-6 sm:py-20
+            lg:-translate-y-8 lg:py-24
+          "
+        >
           {/* Eyebrow */}
-          <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-ink-soft shadow-sm backdrop-blur">
+
+          <div
+            className="
+              mb-7 inline-flex items-center gap-2
+              rounded-full
+              border border-ink/10
+              bg-white/80
+              px-4 py-2
+              text-xs font-semibold uppercase
+              tracking-[0.16em]
+              text-ink-soft
+              shadow-sm
+              backdrop-blur
+            "
+          >
             <span className="h-1.5 w-1.5 rounded-full bg-marigold" />
-            Find the Right Government Service
+
+            {t.home.eyebrow}
           </div>
 
           {/* Main heading */}
+
           <h1
             className="
-        max-w-4xl
-        text-4xl font-semibold
-        leading-[1.05]
-        tracking-[-0.035em]
-        text-ink
-        sm:text-5xl
-        lg:text-7xl
-      "
+              max-w-4xl
+              text-4xl font-semibold
+              leading-[1.05]
+              tracking-[-0.035em]
+              text-ink
+              sm:text-5xl
+              lg:text-7xl
+            "
           >
             {t.home.heroTitle}
           </h1>
 
           {/* Description */}
+
           <p
             className="
-        mx-auto mt-8
-        max-w-2xl
-        text-base
-        leading-7
-        text-ink-soft
-        sm:text-lg
-        sm:leading-8
-      "
+              mx-auto mt-8
+              max-w-2xl
+              text-base
+              leading-7
+              text-ink-soft
+              sm:text-lg
+              sm:leading-8
+            "
           >
             {t.home.heroSubtitle}
           </p>
 
           {/* Search */}
+
           <form
             onSubmit={handleSubmit}
             className="
-        group
-        mx-auto mt-8
-        flex w-full max-w-2xl
-        flex-col gap-2
-        rounded-[22px]
-        border border-ink/10
-        bg-white
-        p-2
-        shadow-[0_12px_40px_rgba(0,0,0,0.07)]
-        transition
-        focus-within:border-ink/20
-        focus-within:shadow-[0_16px_50px_rgba(0,0,0,0.10)]
-        sm:flex-row
-        sm:rounded-full
-      "
+              group
+              mx-auto mt-8
+              flex w-full max-w-2xl
+              flex-col gap-2
+              rounded-[22px]
+              border border-ink/10
+              bg-white
+              p-2
+              shadow-[0_12px_40px_rgba(0,0,0,0.07)]
+              transition
+              focus-within:border-ink/20
+              focus-within:shadow-[0_16px_50px_rgba(0,0,0,0.10)]
+              sm:flex-row
+              sm:rounded-full
+            "
           >
             {/* Input */}
+
             <div className="relative flex min-h-[52px] flex-1 items-center">
               <Search
                 size={20}
                 strokeWidth={1.8}
                 aria-hidden="true"
                 className="
-            absolute left-5
-            text-ink-faint
-            transition-colors
-            group-focus-within:text-ink-soft
-          "
+                  absolute left-5
+                  text-ink-faint
+                  transition-colors
+                  group-focus-within:text-ink-soft
+                "
               />
 
               <input
@@ -273,96 +318,99 @@ export default function Home() {
                   setGoal(e.target.value);
                   setGoalError(false);
                 }}
-                placeholder={
-                  goalError
-                    ? "Enter your service or describe what you need"
-                    : t.home.heroPlaceholder
-                }
-                aria-label="Government service search"
+                placeholder={t.home.heroPlaceholder}
+                aria-label={t.home.heroPlaceholder}
                 className="
-    w-full bg-transparent py-3.5 pl-12 pr-4
-    text-[15px] text-ink outline-none
-    placeholder:text-ink-faint
-  "
+                  w-full
+                  bg-transparent
+                  py-3.5 pl-12 pr-4
+                  text-[15px]
+                  text-ink
+                  outline-none
+                  placeholder:text-ink-faint
+                "
               />
             </div>
 
             {/* Search button */}
+
             <Button
               type="submit"
               variant="accent"
               size="lg"
               className="
-          min-h-[52px]
-          rounded-[16px]
-          px-7
-          font-semibold
-          sm:rounded-full
-        "
+                min-h-[52px]
+                rounded-[16px]
+                px-7
+                font-semibold
+                sm:rounded-full
+              "
             >
               {t.home.heroButton}
             </Button>
           </form>
 
           {/* Stats */}
+
           <div
             className="
-        mt-9
-        flex flex-wrap
-        items-center
-        justify-center
-        gap-x-4
-        gap-y-2
-        text-xs
-        font-medium
-        text-ink-soft
-        sm:text-sm
-      "
+              mt-9
+              flex flex-wrap
+              items-center
+              justify-center
+              gap-x-4
+              gap-y-2
+              text-xs
+              font-medium
+              text-ink-soft
+              sm:text-sm
+            "
           >
-            <span>312+ government services</span>
+            <span>{t.home.servicesCount}</span>
 
             <span
               className="h-1 w-1 rounded-full bg-ink/20"
               aria-hidden="true"
             />
 
-            <span>All 7 provinces</span>
+            <span>{t.home.provincesCount}</span>
           </div>
 
           {/* Explore */}
+
           <button
             type="button"
             onClick={() => navigate("/services")}
             className="
-    group/explore
-    mt-8
-    inline-flex
-    items-center
-    gap-2
-    rounded-full
-    border border-ink/10
-    bg-white/70
-    px-5 py-2.5
-    text-sm font-medium
-    text-ink-soft
-    shadow-sm
-    backdrop-blur-sm
-    transition-all duration-200
-    hover:border-ink/20
-    hover:bg-white
-    hover:text-ink
-    hover:shadow-md
-  "
+              group/explore
+              mt-8
+              inline-flex
+              items-center
+              gap-2
+              rounded-full
+              border border-ink/10
+              bg-white/70
+              px-5 py-2.5
+              text-sm font-medium
+              text-ink-soft
+              shadow-sm
+              backdrop-blur-sm
+              transition-all duration-200
+              hover:border-ink/20
+              hover:bg-white
+              hover:text-ink
+              hover:shadow-md
+            "
           >
-            <span>Explore all services</span>
+            <span>{t.home.browseServices}</span>
 
             <ArrowRight
               size={16}
               strokeWidth={1.8}
               className="
-      transition-transform duration-200
-      group-hover/explore:translate-x-1
-    "
+                transition-transform duration-200
+                group-hover/explore:translate-x-1
+              "
             />
           </button>
         </div>
@@ -403,7 +451,10 @@ export default function Home() {
               ) : (
                 <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                   {popularServices.map((service) => (
-                    <ServiceCard key={service._id} service={service} />
+                    <ServiceCard
+                      key={service._id}
+                      service={service}
+                    />
                   ))}
                 </div>
               )}
@@ -417,11 +468,11 @@ export default function Home() {
               <section className="mt-16 border-t border-line pt-12">
                 <div className="mb-6">
                   <h2 className="text-2xl font-semibold tracking-tight">
-                    Browse by category
+                    {t.home.browseByCategory}
                   </h2>
 
                   <p className="mt-1.5 text-sm text-ink-soft">
-                    Explore services based on what you need.
+                    {t.home.categorySubtitle}
                   </p>
                 </div>
 
@@ -434,10 +485,13 @@ export default function Home() {
                         key={category._id}
                         type="button"
                         onClick={() =>
-                          navigate(`/services?category=${category._id}`)
+                          navigate(
+                            `/services?category=${category._id}`
+                          )
                         }
                         className="
-                          group flex items-center gap-4
+                          group
+                          flex items-center gap-4
                           rounded-2xl
                           border border-ink/10
                           bg-white
@@ -451,6 +505,7 @@ export default function Home() {
                         "
                       >
                         {/* Icon */}
+
                         <span
                           className="
                             flex h-11 w-11 shrink-0
@@ -471,17 +526,19 @@ export default function Home() {
                         </span>
 
                         {/* Content */}
+
                         <span className="min-w-0 flex-1">
                           <span className="block truncate text-sm font-semibold text-ink">
                             {pick(category.name, lang)}
                           </span>
 
                           <span className="mt-0.5 block text-xs text-ink-faint">
-                            Explore services
+                            {t.home.exploreServices}
                           </span>
                         </span>
 
                         {/* Arrow */}
+
                         <ArrowRight
                           size={17}
                           className="
@@ -522,6 +579,7 @@ export default function Home() {
             ].map(([title, body], index) => (
               <div key={title} className="relative">
                 {/* Number */}
+
                 <div
                   className="
                     mb-5 flex h-11 w-11
@@ -537,12 +595,19 @@ export default function Home() {
                 </div>
 
                 {/* Title */}
-                <h3 className="mb-2 font-semibold text-ink">{title}</h3>
+
+                <h3 className="mb-2 font-semibold text-ink">
+                  {title}
+                </h3>
 
                 {/* Description */}
-                <p className="text-sm leading-6 text-ink-soft">{body}</p>
+
+                <p className="text-sm leading-6 text-ink-soft">
+                  {body}
+                </p>
 
                 {/* Connector */}
+
                 {index < 2 && (
                   <div
                     className="

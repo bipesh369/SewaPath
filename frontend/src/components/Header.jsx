@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
-
 import Button from "./ui/Button.jsx";
 
 function Logo() {
@@ -54,191 +52,196 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-ink/10 bg-paper/90 backdrop-blur-xl">
-      <div className="mx-auto flex min-h-[72px] max-w-6xl items-center justify-between gap-4 px-5">
-        {/* Brand */}
-        <Link
-  to="/"
-  onClick={(e) => {
-    closeMobileMenu();
+    <>
+      {/* Header */}
+      <header className="sticky top-0 z-[100] border-b border-ink/10 bg-paper/90 backdrop-blur-xl">
+        <div className="mx-auto flex min-h-[72px] max-w-6xl items-center justify-between gap-4 px-5">
+          {/* Brand */}
+          <Link
+            to="/"
+            onClick={(e) => {
+              closeMobileMenu();
 
-    if (window.location.pathname === "/") {
-      e.preventDefault();
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    }
-  }}
-  className="group flex shrink-0 items-center gap-2.5"
->
-          <div
-            className="
-              rounded-[9px]
-              transition-transform duration-200
-              group-hover:scale-[1.03]
-            "
+              if (window.location.pathname === "/") {
+                e.preventDefault();
+
+                window.scrollTo({
+                  top: 0,
+                  behavior: "smooth",
+                });
+              }
+            }}
+            className="group flex shrink-0 items-center gap-2.5"
           >
-            <Logo />
-          </div>
+            <div className="rounded-[9px] transition-transform duration-200 group-hover:scale-[1.03]">
+              <Logo />
+            </div>
 
-          <span className="font-display text-lg font-semibold tracking-[-0.02em] text-ink">
-            {t.appName}
-          </span>
-        </Link>
+            <span className="font-display text-lg font-semibold tracking-[-0.02em] text-ink">
+              {t.appName}
+            </span>
+          </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-7 md:flex">
-  <NavLink
-    to="/"
-    end
-    onClick={() => {
-      if (window.location.pathname === "/") {
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-      }
-    }}
-    className={linkCls}
-  >
-    {t.nav.home}
-  </NavLink>
-
-          <NavLink to="/services" className={linkCls}>
-            {t.nav.services}
-          </NavLink>
-
-          {user && (
-            <NavLink to="/dashboard" className={linkCls}>
-              {t.nav.dashboard}
-            </NavLink>
-          )}
-
-          {isAdmin && (
-            <NavLink to="/admin" className={linkCls}>
-              {t.nav.admin}
-            </NavLink>
-          )}
-        </nav>
-
-        {/* Desktop Actions */}
-        <div className="hidden items-center gap-2.5 md:flex">
-          {/* Language */}
-          <button
-            onClick={toggleLang}
-            className="
-              rounded-full
-              border border-ink/10
-              bg-white/70
-              px-3 py-1.5
-              text-sm font-medium text-ink-soft
-              shadow-sm
-              transition-all duration-200
-              hover:border-ink/20
-              hover:bg-white
-              hover:text-ink
-            "
-            aria-label="Switch language"
-          >
-            {t.common.language}
-          </button>
-
-          {user ? (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleLogout}
-              className="rounded-full px-3.5"
+          {/* Desktop Navigation */}
+          <nav className="hidden items-center gap-7 md:flex">
+            <NavLink
+              to="/"
+              end
+              onClick={() => {
+                if (window.location.pathname === "/") {
+                  window.scrollTo({
+                    top: 0,
+                    behavior: "smooth",
+                  });
+                }
+              }}
+              className={linkCls}
             >
-              {t.nav.logout}
-            </Button>
-          ) : (
-            <>
+              {t.nav.home}
+            </NavLink>
+
+            <NavLink to="/services" className={linkCls}>
+              {t.nav.services}
+            </NavLink>
+
+            {user && (
+              <NavLink to="/dashboard" className={linkCls}>
+                {t.nav.dashboard}
+              </NavLink>
+            )}
+
+            {isAdmin && (
+              <NavLink to="/admin" className={linkCls}>
+                {t.nav.admin}
+              </NavLink>
+            )}
+          </nav>
+
+          {/* Desktop Actions */}
+          <div className="hidden items-center gap-2.5 md:flex">
+            {/* Language */}
+            <button
+              onClick={toggleLang}
+              className="
+                rounded-full
+                border border-ink/10
+                bg-white/70
+                px-3 py-1.5
+                text-sm font-medium
+                text-ink-soft
+                shadow-sm
+                transition-all duration-200
+                hover:border-ink/20
+                hover:bg-white
+                hover:text-ink
+              "
+              aria-label="Switch language"
+            >
+              {t.common.language}
+            </button>
+
+            {user ? (
               <Button
-                as="link"
-                to="/login"
                 variant="ghost"
                 size="sm"
+                onClick={handleLogout}
                 className="rounded-full px-3.5"
               >
-                {t.nav.login}
+                {t.nav.logout}
               </Button>
+            ) : (
+              <>
+                <Button
+                  as="link"
+                  to="/login"
+                  variant="ghost"
+                  size="sm"
+                  className="rounded-full px-3.5"
+                >
+                  {t.nav.login}
+                </Button>
 
-              <Button
-                to="/register"
-                variant="accent"
-                size="sm"
-                className="
-                  rounded-full
-                  px-4
-                  font-semibold
-                  shadow-sm
-                  transition-all
-                  duration-200
-                  hover:-translate-y-0.5
-                  hover:shadow-md
-                "
+                <Button
+                  to="/register"
+                  variant="accent"
+                  size="sm"
+                  className="
+                    rounded-full
+                    px-4
+                    font-semibold
+                    shadow-sm
+                    transition-all
+                    duration-200
+                    hover:-translate-y-0.5
+                    hover:shadow-md
+                  "
+                >
+                  {t.nav.register}
+                </Button>
+              </>
+            )}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            type="button"
+            onClick={() => setMobileOpen((prev) => !prev)}
+            className="
+              relative
+              z-[110]
+              flex
+              h-10
+              w-10
+              shrink-0
+              items-center
+              justify-center
+              rounded-full
+              border
+              border-ink/10
+              bg-white
+              text-ink
+              shadow-sm
+              transition-all
+              duration-200
+              hover:bg-white
+              md:hidden
+            "
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+          >
+            {mobileOpen ? (
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                aria-hidden="true"
               >
-                {t.nav.register}
-              </Button>
-            </>
-          )}
+                <path d="M18 6L6 18" />
+                <path d="M6 6L18 18" />
+              </svg>
+            ) : (
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
+                <path d="M4 6h16" />
+                <path d="M4 12h16" />
+                <path d="M4 18h16" />
+              </svg>
+            )}
+          </button>
         </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          type="button"
-          onClick={() => setMobileOpen((prev) => !prev)}
-          className="
-            flex
-            h-10
-            w-10
-            items-center
-            justify-center
-            rounded-full
-            border
-            border-ink/10
-            bg-white/70
-            text-ink
-            transition-all
-            duration-200
-            hover:bg-white
-            md:hidden
-          "
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          aria-expanded={mobileOpen}
-        >
-          {mobileOpen ? (
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            >
-              <path d="M18 6L6 18" />
-              <path d="M6 6L18 18" />
-            </svg>
-          ) : (
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            >
-              <path d="M4 6h16" />
-              <path d="M4 12h16" />
-              <path d="M4 18h16" />
-            </svg>
-          )}
-        </button>
-      </div>
+      </header>
 
       {/* Mobile Navigation */}
       {mobileOpen && (
@@ -247,35 +250,35 @@ export default function Header() {
           <div
             onClick={closeMobileMenu}
             className="
-        fixed
-        inset-0
-        z-40
-        bg-black/20
-        backdrop-blur-[2px]
-        md:hidden
-      "
+              fixed
+              inset-0
+              z-[80]
+              bg-black/20
+              backdrop-blur-[2px]
+              md:hidden
+            "
           />
 
           {/* Side Drawer */}
           <div
             className="
-        fixed
-        right-0
-        top-[72px]
-        z-50
-        h-[calc(100vh-72px)]
-        w-[50vw]
-        min-w-[240px]
-        max-w-[320px]
-        overflow-y-auto
-        border-l
-        border-ink/10
-        bg-paper
-        px-4
-        py-5
-        shadow-[-12px_0_35px_rgba(15,23,42,0.10)]
-        md:hidden
-      "
+              fixed
+              right-0
+              top-[72px]
+              z-[90]
+              h-[calc(100vh-72px)]
+              w-[50vw]
+              min-w-[240px]
+              max-w-[320px]
+              overflow-y-auto
+              border-l
+              border-ink/10
+              bg-paper
+              px-4
+              py-5
+              shadow-[-12px_0_35px_rgba(15,23,42,0.10)]
+              md:hidden
+            "
           >
             <nav className="flex flex-col gap-1">
               {/* Home */}
@@ -284,18 +287,18 @@ export default function Header() {
                 end
                 onClick={closeMobileMenu}
                 className={({ isActive }) => `
-            rounded-xl
-            px-4
-            py-3
-            text-sm
-            font-medium
-            transition-colors
-            ${
-              isActive
-                ? "bg-ink/5 text-ink"
-                : "text-ink-faint hover:bg-ink/5 hover:text-ink"
-            }
-          `}
+                  rounded-xl
+                  px-4
+                  py-3
+                  text-sm
+                  font-medium
+                  transition-colors
+                  ${
+                    isActive
+                      ? "bg-ink/5 text-ink"
+                      : "text-ink-faint hover:bg-ink/5 hover:text-ink"
+                  }
+                `}
               >
                 {t.nav.home}
               </NavLink>
@@ -305,18 +308,18 @@ export default function Header() {
                 to="/services"
                 onClick={closeMobileMenu}
                 className={({ isActive }) => `
-            rounded-xl
-            px-4
-            py-3
-            text-sm
-            font-medium
-            transition-colors
-            ${
-              isActive
-                ? "bg-ink/5 text-ink"
-                : "text-ink-faint hover:bg-ink/5 hover:text-ink"
-            }
-          `}
+                  rounded-xl
+                  px-4
+                  py-3
+                  text-sm
+                  font-medium
+                  transition-colors
+                  ${
+                    isActive
+                      ? "bg-ink/5 text-ink"
+                      : "text-ink-faint hover:bg-ink/5 hover:text-ink"
+                  }
+                `}
               >
                 {t.nav.services}
               </NavLink>
@@ -327,18 +330,18 @@ export default function Header() {
                   to="/dashboard"
                   onClick={closeMobileMenu}
                   className={({ isActive }) => `
-              rounded-xl
-              px-4
-              py-3
-              text-sm
-              font-medium
-              transition-colors
-              ${
-                isActive
-                  ? "bg-ink/5 text-ink"
-                  : "text-ink-faint hover:bg-ink/5 hover:text-ink"
-              }
-            `}
+                    rounded-xl
+                    px-4
+                    py-3
+                    text-sm
+                    font-medium
+                    transition-colors
+                    ${
+                      isActive
+                        ? "bg-ink/5 text-ink"
+                        : "text-ink-faint hover:bg-ink/5 hover:text-ink"
+                    }
+                  `}
                 >
                   {t.nav.dashboard}
                 </NavLink>
@@ -350,18 +353,18 @@ export default function Header() {
                   to="/admin"
                   onClick={closeMobileMenu}
                   className={({ isActive }) => `
-              rounded-xl
-              px-4
-              py-3
-              text-sm
-              font-medium
-              transition-colors
-              ${
-                isActive
-                  ? "bg-ink/5 text-ink"
-                  : "text-ink-faint hover:bg-ink/5 hover:text-ink"
-              }
-            `}
+                    rounded-xl
+                    px-4
+                    py-3
+                    text-sm
+                    font-medium
+                    transition-colors
+                    ${
+                      isActive
+                        ? "bg-ink/5 text-ink"
+                        : "text-ink-faint hover:bg-ink/5 hover:text-ink"
+                    }
+                  `}
                 >
                   {t.nav.admin}
                 </NavLink>
@@ -374,17 +377,17 @@ export default function Header() {
               <button
                 onClick={toggleLang}
                 className="
-            rounded-xl
-            px-4
-            py-3
-            text-left
-            text-sm
-            font-medium
-            text-ink-soft
-            transition-colors
-            hover:bg-ink/5
-            hover:text-ink
-          "
+                  rounded-xl
+                  px-4
+                  py-3
+                  text-left
+                  text-sm
+                  font-medium
+                  text-ink-soft
+                  transition-colors
+                  hover:bg-ink/5
+                  hover:text-ink
+                "
               >
                 {t.common.language}
               </button>
@@ -394,18 +397,18 @@ export default function Header() {
                 <button
                   onClick={handleLogout}
                   className="
-              mt-1
-              rounded-xl
-              px-4
-              py-3
-              text-left
-              text-sm
-              font-medium
-              text-ink-soft
-              transition-colors
-              hover:bg-ink/5
-              hover:text-ink
-            "
+                    mt-1
+                    rounded-xl
+                    px-4
+                    py-3
+                    text-left
+                    text-sm
+                    font-medium
+                    text-ink-soft
+                    transition-colors
+                    hover:bg-ink/5
+                    hover:text-ink
+                  "
                 >
                   {t.nav.logout}
                 </button>
@@ -437,6 +440,6 @@ export default function Header() {
           </div>
         </>
       )}
-    </header>
+    </>
   );
 }
