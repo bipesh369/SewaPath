@@ -1,6 +1,9 @@
 import "dotenv/config";
+
 import bcrypt from "bcryptjs";
+
 import { connectDB } from "../config/db.js";
+
 import { ROLES } from "../constants.js";
 
 import User from "../models/user.model.js";
@@ -17,11 +20,28 @@ import { offices as officeSeed } from "./data/offices.data.js";
 import { services as serviceSeed } from "./data/services.data.js";
 
 async function run() {
-  if (!process.env.MONGO_URI)
-    throw new Error("MONGO_URI is not set. Copy .env.example to .env first.");
+  // Check required environment variables
+  if (!process.env.MONGO_URI) {
+    throw new Error(
+      "MONGO_URI is not set. Copy .env.example to .env first."
+    );
+  }
+
+  if (!process.env.ADMIN_EMAIL) {
+    throw new Error("ADMIN_EMAIL is not set in .env");
+  }
+
+  if (!process.env.ADMIN_PASSWORD) {
+    throw new Error("ADMIN_PASSWORD is not set in .env");
+  }
+
+  const adminEmail = process.env.ADMIN_EMAIL.trim().toLowerCase();
+  const adminPassword = process.env.ADMIN_PASSWORD;
+
   await connectDB(process.env.MONGO_URI);
 
   console.log("[seed] clearing existing content...");
+
   await Promise.all([
     EligibilityQuestion.deleteMany({}),
     DocumentRequirement.deleteMany({}),
@@ -33,17 +53,25 @@ async function run() {
   ]);
 
   console.log("[seed] creating categories...");
+
   const categories = await Category.insertMany(categorySeed);
-  const categoryBySlug = Object.fromEntries(categories.map((c) => [c.slug, c]));
+
+  const categoryBySlug = Object.fromEntries(
+    categories.map((c) => [c.slug, c])
+  );
 
   console.log("[seed] creating offices...");
+
   const officeDocs = officeSeed.map(({ key, ...rest }) => rest);
+
   const offices = await Office.insertMany(officeDocs);
+
   const officeByKey = Object.fromEntries(
-    officeSeed.map((o, i) => [o.key, offices[i]]),
+    officeSeed.map((o, i) => [o.key, offices[i]])
   );
 
   console.log("[seed] creating the 12-service launch catalog...");
+
   for (const raw of serviceSeed) {
     const {
       categorySlug,
@@ -53,11 +81,13 @@ async function run() {
       journey,
       ...serviceFields
     } = raw;
+
     const category = categoryBySlug[categorySlug];
     const office = officeByKey[officeKey];
+
     if (!category || !office) {
       console.warn(
-        `[seed] skipping ${raw.slug}: missing category or office reference`,
+        `[seed] skipping ${raw.slug}: missing category or office reference`
       );
       continue;
     }
@@ -74,33 +104,64 @@ async function run() {
         ...q,
         service: service._id,
         order: i + 1,
-      })),
+      }))
     );
+
+    // Create document requirements
     await DocumentRequirement.insertMany(
-      documents.map((d, i) => ({ ...d, service: service._id, order: i + 1 })),
+      documents.map((d, i) => ({
+        ...d,
+        service: service._id,
+        order: i + 1,
+      }))
     );
+
+    // Create journey steps
     await JourneyStep.insertMany(
-      journey.map((s, i) => ({ ...s, service: service._id, order: i + 1 })),
+      journey.map((s, i) => ({
+        ...s,
+        service: service._id,
+        order: i + 1,
+      }))
     );
   }
 
-  console.log("[seed] creating a default admin account...");
-  const adminEmail = process.env.SEED_ADMIN_EMAIL || "admin@sewapath.gov.np";
-  const adminPassword = process.env.SEED_ADMIN_PASSWORD || "SEWApath123";
-  const existingAdmin = await User.findOne({ email: adminEmail });
-  if (!existingAdmin) {
-    await User.create({
+  console.log("[seed] creating/updating default admin account...");
+
+  // Find existing admin by email
+  let admin = await User.findOne({
+    email: adminEmail,
+  });
+
+  // Hash the password
+  const passwordHash = await bcrypt.hash(adminPassword, 10);
+
+  if (!admin) {
+    // Create new admin
+    admin = await User.create({
       name: "SewaPath Admin",
       email: adminEmail,
-      passwordHash: await bcrypt.hash(adminPassword, 10),
+      passwordHash,
       role: ROLES.ADMIN,
     });
-    console.log(`[seed] admin account -> ${adminEmail} / ${adminPassword}`);
+
+    console.log(`[seed] admin account created -> ${adminEmail}`);
+  } else {
+    // Update existing admin
+    admin.name = "SewaPath Admin";
+    admin.email = adminEmail;
+    admin.passwordHash = passwordHash;
+    admin.role = ROLES.ADMIN;
+
+    await admin.save();
+
+    console.log(`[seed] admin account updated -> ${adminEmail}`);
   }
 
   console.log(
-    `[seed] done. ${categories.length} categories, ${offices.length} offices, ${serviceSeed.length} services.`,
+    `[seed] done. ${categories.length} categories, ${offices.length} offices, ${serviceSeed.length} services.`
   );
+
   process.exit(0);
 }
 
