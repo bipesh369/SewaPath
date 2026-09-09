@@ -195,7 +195,7 @@ export default function Home() {
         </div>
 
         {/* Hero */}
-        <div className="mx-auto flex min-h-[calc(100vh-72px)] max-w-6xl flex-col items-center justify-center px-5 py-20 text-center sm:py-24 lg:py-28">
+        <div className="mx-auto flex min-h-[calc(100vh-72px)] max-w-6xl flex-col items-center justify-center px-5 py-16 text-center sm:py-20 lg:py-24">
           {/* Eyebrow */}
           <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-ink-soft shadow-sm backdrop-blur">
             <span className="h-1.5 w-1.5 rounded-full bg-marigold" />

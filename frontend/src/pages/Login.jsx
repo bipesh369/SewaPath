@@ -81,7 +81,7 @@ export default function Login() {
 
       {/* ================= LOGIN CONTENT ================= */}
 
-      <div className="relative mx-auto flex min-h-[calc(100vh-72px)] max-w-6xl items-center justify-center px-5 py-16 sm:py-20">
+      <div className="relative mx-auto flex min-h-[calc(100vh-72px)] max-w-6xl items-center justify-center px-5 py-10 sm:py-16">
         <div className="w-full max-w-[440px]">
           {/* Header */}
           <div className="mb-8 text-center">
