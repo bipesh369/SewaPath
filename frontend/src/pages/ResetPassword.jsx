@@ -175,7 +175,7 @@ export default function ResetPassword() {
                 to="/login"
                 className="text-sm font-semibold text-ink transition-colors hover:text-marigold"
               >
-                ← Back to Login
+                Back to Login
               </Link>
             </div>
           </Card>
