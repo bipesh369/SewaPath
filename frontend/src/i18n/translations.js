@@ -25,7 +25,7 @@ export const translations = {
   heroSubtitle:
     "Describe what you need. SewaPath finds the service, office, documents, and steps.",
 
-  heroPlaceholder: "What government service can we help you with?",
+  heroPlaceholder: "Birth Registration",
   heroButton: "Find a service",
 
   orBrowse: "Browse services by category",
@@ -158,7 +158,7 @@ export const translations = {
   heroSubtitle:
     "आफ्नै शब्दमा लेख्नुहोस्। सेवापथले सही सेवा, कार्यालय, कागजात र चरणहरू पत्ता लगाउन मद्दत गर्छ।",
 
-  heroPlaceholder: "तपाईंलाई कुन सरकारी सेवा चाहिन्छ?",
+  heroPlaceholder: "जन्म दर्ता",
   heroButton: "सेवा खोज्नुहोस्",
 
   orBrowse: "वर्गअनुसार सेवा खोज्नुहोस्",

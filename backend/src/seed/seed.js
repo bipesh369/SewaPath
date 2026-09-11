@@ -40,6 +40,10 @@ async function run() {
 
   await connectDB(process.env.MONGO_URI);
 
+  // -----------------------------
+  // Clear existing content
+  // -----------------------------
+
   console.log("[seed] clearing existing content...");
 
   await Promise.all([
@@ -52,6 +56,10 @@ async function run() {
     Category.deleteMany({}),
   ]);
 
+  // -----------------------------
+  // Create categories
+  // -----------------------------
+
   console.log("[seed] creating categories...");
 
   const categories = await Category.insertMany(categorySeed);
@@ -59,6 +67,10 @@ async function run() {
   const categoryBySlug = Object.fromEntries(
     categories.map((c) => [c.slug, c])
   );
+
+  // -----------------------------
+  // Create offices
+  // -----------------------------
 
   console.log("[seed] creating offices...");
 
@@ -69,6 +81,10 @@ async function run() {
   const officeByKey = Object.fromEntries(
     officeSeed.map((o, i) => [o.key, offices[i]])
   );
+
+  // -----------------------------
+  // Create services
+  // -----------------------------
 
   console.log("[seed] creating the 12-service launch catalog...");
 
@@ -98,7 +114,7 @@ async function run() {
       office: office._id,
     });
 
-    // Create eligibility questions for this service
+    // Create eligibility questions
     await EligibilityQuestion.insertMany(
       eligibility.map((q, i) => ({
         ...q,
@@ -126,18 +142,20 @@ async function run() {
     );
   }
 
+  // -----------------------------
+  // Create / update admin
+  // -----------------------------
+
   console.log("[seed] creating/updating default admin account...");
 
-  // Find existing admin by email
+  const passwordHash = await bcrypt.hash(adminPassword, 10);
+
   let admin = await User.findOne({
     email: adminEmail,
   });
 
-  // Hash the password
-  const passwordHash = await bcrypt.hash(adminPassword, 10);
-
   if (!admin) {
-    // Create new admin
+    // Admin doesn't exist, create it
     admin = await User.create({
       name: "SewaPath Admin",
       email: adminEmail,
@@ -147,9 +165,8 @@ async function run() {
 
     console.log(`[seed] admin account created -> ${adminEmail}`);
   } else {
-    // Update existing admin
+    // Admin already exists, update password and role
     admin.name = "SewaPath Admin";
-    admin.email = adminEmail;
     admin.passwordHash = passwordHash;
     admin.role = ROLES.ADMIN;
 
@@ -157,6 +174,10 @@ async function run() {
 
     console.log(`[seed] admin account updated -> ${adminEmail}`);
   }
+
+  // -----------------------------
+  // Done
+  // -----------------------------
 
   console.log(
     `[seed] done. ${categories.length} categories, ${offices.length} offices, ${serviceSeed.length} services.`
