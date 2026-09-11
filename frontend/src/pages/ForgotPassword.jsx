@@ -1,11 +1,9 @@
 
 import { useState } from "react";
 
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { useLanguage } from "../i18n/LanguageContext.jsx";
-
-import { useAuth } from "../context/AuthContext.jsx";
 
 import Card from "../components/ui/Card.jsx";
 
@@ -15,38 +13,35 @@ import Button from "../components/ui/Button.jsx";
 
 import ErrorNotice from "../components/ui/ErrorNotice.jsx";
 
-import { Eye, EyeOff } from "lucide-react";
+import * as authApi from "../api/auth.api.js";
 
-export default function Login() {
+export default function ForgotPassword() {
   const { t } = useLanguage();
 
-  const { login } = useAuth();
-
-  const navigate = useNavigate();
-
-  const location = useLocation();
-
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
+  const [email, setEmail] = useState("");
 
   const [error, setError] = useState("");
 
-  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
 
-  const [showPassword, setShowPassword] = useState(false);
+  const [busy, setBusy] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     setBusy(true);
     setError("");
+    setMessage("");
 
     try {
-      await login(form.email, form.password);
+      const response = await authApi.forgotPassword(email);
 
-      navigate(location.state?.from || "/dashboard");
+      setMessage(
+        response?.message ||
+          "If an account exists with this email, you will receive a password reset link."
+      );
+
+      setEmail("");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -97,7 +92,7 @@ export default function Login() {
         />
       </div>
 
-      {/* ================= LOGIN CONTENT ================= */}
+      {/* ================= FORGOT PASSWORD CONTENT ================= */}
 
       <div
         className="
@@ -124,11 +119,16 @@ export default function Login() {
                 sm:text-4xl
               "
             >
-              {t.auth.loginTitle}
+              Forgot your password?
             </h1>
+
+            <p className="mx-auto mt-3 max-w-[380px] text-sm leading-6 text-ink-soft">
+              Enter the email address associated with your SewaPath account.
+              We’ll send you a link to reset your password.
+            </p>
           </div>
 
-          {/* ================= LOGIN CARD ================= */}
+          {/* ================= CARD ================= */}
 
           <Card
             className="
@@ -146,92 +146,46 @@ export default function Login() {
 
                 <ErrorNotice message={error} />
 
+                {/* Success */}
+
+                {message && (
+                  <div
+                    className="
+                      rounded-xl
+                      border
+                      border-green-200
+                      bg-green-50
+                      px-4
+                      py-3
+                      text-sm
+                      leading-6
+                      text-green-700
+                    "
+                    role="status"
+                  >
+                    {message}
+                  </div>
+                )}
+
                 {/* Email */}
 
                 <Input
                   id="email"
                   type="email"
-                  label={t.auth.email}
+                  label="Email"
+                  placeholder="you@example.com"
                   required
-                  value={form.email}
-                  onChange={(e) =>
-                    setForm((f) => ({
-                      ...f,
-                      email: e.target.value,
-                    }))
-                  }
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
 
-                {/* Password */}
-
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    label={t.auth.password}
-                    required
-                    value={form.password}
-                    onChange={(e) =>
-                      setForm((f) => ({
-                        ...f,
-                        password: e.target.value,
-                      }))
-                    }
-                  />
-
-                  {/* Show / Hide Password */}
-
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    className="
-                      absolute
-                      right-3
-                      top-[38px]
-                      rounded-md
-                      p-1
-                      text-ink-faint
-                      transition-colors
-                      hover:text-ink
-                    "
-                    aria-label={
-                      showPassword ? "Hide password" : "Show password"
-                    }
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-5 w-5" />
-                    ) : (
-                      <Eye className="h-5 w-5" />
-                    )}
-                  </button>
-                </div>
-
-                {/* Forgot Password */}
-
-                <div className="-mt-3 flex justify-end">
-                  <Link
-                    to="/forgot-password"
-                    className="
-                      text-sm
-                      font-medium
-                      text-ink-soft
-                      transition-colors
-                      hover:text-marigold
-                    "
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
-
-                {/* Login Button */}
+                {/* Submit */}
 
                 <Button
                   type="submit"
                   variant="accent"
                   size="lg"
                   className="
-                    group
-                    mt-5
                     min-h-[54px]
                     w-full
                     rounded-xl
@@ -244,12 +198,12 @@ export default function Login() {
                   "
                   disabled={busy}
                 >
-                  <span>{t.auth.loginButton}</span>
+                  {busy ? "Sending..." : "Send reset link"}
                 </Button>
               </form>
             </div>
 
-            {/* Bottom security strip */}
+            {/* Bottom */}
 
             <div
               className="
@@ -261,17 +215,25 @@ export default function Login() {
                 text-center
               "
             >
-              <span className="text-xs text-ink-faint">
-                Secure access to your SewaPath account
-              </span>
+              <Link
+                to="/login"
+                className="
+                  text-sm
+                  font-semibold
+                  text-ink
+                  transition-colors
+                  hover:text-marigold
+                "
+              >
+                ← Back to Login
+              </Link>
             </div>
           </Card>
 
           {/* Register */}
 
           <p className="mt-7 text-center text-sm text-ink-soft">
-            {t.auth.noAccount}{" "}
-
+            Don't have an account?{" "}
             <Link
               to="/register"
               className="
@@ -282,7 +244,7 @@ export default function Login() {
                 hover:text-marigold
               "
             >
-              {t.auth.createOne}
+              Create one
             </Link>
           </p>
         </div>
@@ -290,3 +252,4 @@ export default function Login() {
     </div>
   );
 }
+
