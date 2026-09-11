@@ -225,7 +225,7 @@ export default function ForgotPassword() {
                   hover:text-marigold
                 "
               >
-                ← Back to Login
+                Back to Login
               </Link>
             </div>
           </Card>
