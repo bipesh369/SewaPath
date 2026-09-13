@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import dns from 'node:dns';
 
+// Prefer IPv4 on environments such as Render
 dns.setDefaultResultOrder('ipv4first');
 
 const transporter = nodemailer.createTransport({
@@ -20,12 +21,6 @@ export async function sendPasswordResetEmail({
   resetUrl,
 }) {
   try {
-    console.log('[email] SMTP config:', {
-      host: process.env.MAIL_HOST,
-      port: process.env.MAIL_PORT,
-      user: process.env.EMAIL_USER,
-    });
-
     const info = await transporter.sendMail({
       from: `"SewaPath" <${process.env.EMAIL_USER}>`,
       to: email,
@@ -97,7 +92,6 @@ SewaPath`,
 
     console.log('[email] Password reset email sent');
     console.log('[email] Message ID:', info.messageId);
-    console.log('[email] Response:', info.response);
 
     return info;
   } catch (error) {
