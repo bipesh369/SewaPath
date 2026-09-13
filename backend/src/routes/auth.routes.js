@@ -4,9 +4,11 @@ import {
   login,
   me,
   updatePreferredLanguage,
+   verifyPasswordResetOtp,
   forgotPassword,
   resetPassword,
 } from "../controllers/auth.controller.js";
+
 import { requireAuth } from "../middleware/auth.middleware.js";
 
 const router = Router();
@@ -17,6 +19,15 @@ router.get("/me", requireAuth, me);
 router.patch("/me/language", requireAuth, updatePreferredLanguage);
 
 router.post("/forgot-password", forgotPassword);
-router.post("/reset-password/:token", resetPassword);
+
+router.post(
+  "/verify-reset-otp",
+  verifyPasswordResetOtp
+);
+
+router.post(
+  "/reset-password",
+  resetPassword
+);
 
 export default router;

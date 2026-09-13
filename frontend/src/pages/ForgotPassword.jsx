@@ -1,6 +1,6 @@
-
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 
 import Card from "../components/ui/Card.jsx";
 import { Input } from "../components/ui/Input.jsx";
@@ -10,12 +10,27 @@ import ErrorNotice from "../components/ui/ErrorNotice.jsx";
 import * as authApi from "../api/auth.api.js";
 
 export default function ForgotPassword() {
+  const navigate = useNavigate();
+
+  const [step, setStep] = useState("email");
+
   const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+
+  const [resetToken, setResetToken] = useState("");
+
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState(false);
+
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSendOtp = async (e) => {
     e.preventDefault();
 
     setError("");
@@ -23,17 +38,107 @@ export default function ForgotPassword() {
     setBusy(true);
 
     try {
-      const response = await authApi.forgotPassword(email.trim());
+      const response = await authApi.forgotPassword(
+        email.trim()
+      );
 
       setMessage(
         response?.message ||
-          "Password reset link has been sent to your email."
+          "A verification code has been sent to your email."
       );
+
+      setStep("otp");
     } catch (err) {
       setError(
         err?.response?.data?.message ||
           err?.message ||
-          "Unable to send the password reset link."
+          "Unable to send the verification code."
+      );
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+
+    setError("");
+    setMessage("");
+
+    if (!/^\d{6}$/.test(otp)) {
+      setError("Please enter a valid 6-digit OTP.");
+      return;
+    }
+
+    setBusy(true);
+
+    try {
+      const response = await authApi.verifyResetOtp(
+        email.trim(),
+        otp
+      );
+
+      setResetToken(response.resetToken);
+
+      setMessage(
+        response?.message ||
+          "OTP verified successfully."
+      );
+
+      setStep("password");
+    } catch (err) {
+      setError(
+        err?.response?.data?.message ||
+          err?.message ||
+          "Invalid OTP."
+      );
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+
+    setError("");
+    setMessage("");
+
+    if (password.length < 6) {
+      setError(
+        "Password must be at least 6 characters."
+      );
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    setBusy(true);
+
+    try {
+      const response = await authApi.resetPassword(
+        resetToken,
+        password
+      );
+
+      setMessage(
+        response?.message ||
+          "Password has been reset successfully."
+      );
+
+      setPassword("");
+      setConfirmPassword("");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+    } catch (err) {
+      setError(
+        err?.response?.data?.message ||
+          err?.message ||
+          "Unable to reset password."
       );
     } finally {
       setBusy(false);
@@ -42,12 +147,10 @@ export default function ForgotPassword() {
 
   return (
     <div className="relative min-h-[calc(100vh-72px)] overflow-hidden bg-[#fafaf9]">
-      {/* ================= PREMIUM BACKGROUND ================= */}
       <div
         className="pointer-events-none absolute inset-0"
         aria-hidden="true"
       >
-        {/* Warm central glow */}
         <div
           className="
             absolute left-1/2 top-[-280px]
@@ -59,7 +162,6 @@ export default function ForgotPassword() {
           "
         />
 
-        {/* Subtle top highlight */}
         <div
           className="
             absolute inset-x-0 top-0
@@ -68,7 +170,6 @@ export default function ForgotPassword() {
           "
         />
 
-        {/* Architectural grid */}
         <div
           className="
             absolute inset-0
@@ -79,7 +180,6 @@ export default function ForgotPassword() {
         />
       </div>
 
-      {/* ================= FORGOT PASSWORD CONTENT ================= */}
       <div
         className="
           relative mx-auto flex
@@ -93,7 +193,7 @@ export default function ForgotPassword() {
         "
       >
         <div className="w-full max-w-[440px]">
-          {/* Header */}
+
           <div className="mb-8 text-center">
             <h1
               className="
@@ -104,16 +204,23 @@ export default function ForgotPassword() {
                 sm:text-4xl
               "
             >
-              Forgot your password?
+              {step === "email" && "Forgot your password?"}
+              {step === "otp" && "Verify your email"}
+              {step === "password" && "Create new password"}
             </h1>
 
             <p className="mx-auto mt-3 max-w-[380px] text-sm leading-6 text-ink-soft">
-              Enter the email address associated with your SewaPath account.
-              We’ll send you a link to reset your password.
+              {step === "email" &&
+                "Enter the email address associated with your SewaPath account."}
+
+              {step === "otp" &&
+                `Enter the 6-digit verification code sent to ${email}.`}
+
+              {step === "password" &&
+                "Create a new password for your SewaPath account."}
             </p>
           </div>
 
-          {/* ================= CARD ================= */}
           <Card
             className="
               overflow-hidden
@@ -125,65 +232,220 @@ export default function ForgotPassword() {
             "
           >
             <div className="px-7 py-10 sm:px-9 sm:py-12">
-              <form onSubmit={handleSubmit} className="space-y-7">
-                {/* Error */}
-                <ErrorNotice message={error} />
 
-                {/* Success */}
-                {message && (
-                  <div
-                    className="
-                      rounded-xl
-                      border
-                      border-green-200
-                      bg-green-50
-                      px-4
-                      py-3
-                      text-sm
-                      leading-6
-                      text-green-700
-                    "
-                    role="status"
-                  >
-                    {message}
-                  </div>
-                )}
+              <ErrorNotice message={error} />
 
-                {/* Email */}
-                <Input
-                  id="email"
-                  type="email"
-                  label="Email"
-                  placeholder="you@example.com"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-
-                {/* Submit */}
-                <Button
-                  type="submit"
-                  variant="accent"
-                  size="lg"
+              {message && (
+                <div
                   className="
-                    min-h-[54px]
-                    w-full
+                    mb-6
                     rounded-xl
-                    font-semibold
-                    shadow-sm
-                    transition-all
-                    duration-200
-                    hover:-translate-y-0.5
-                    hover:shadow-lg
+                    border
+                    border-green-200
+                    bg-green-50
+                    px-4
+                    py-3
+                    text-sm
+                    leading-6
+                    text-green-700
                   "
-                  disabled={busy}
+                  role="status"
                 >
-                  {busy ? "Sending..." : "Send reset link"}
-                </Button>
-              </form>
+                  {message}
+                </div>
+              )}
+
+              {step === "email" && (
+                <form
+                  onSubmit={handleSendOtp}
+                  className="space-y-7"
+                >
+                  <Input
+                    id="email"
+                    type="email"
+                    label="Email"
+                    placeholder="you@example.com"
+                    required
+                    value={email}
+                    onChange={(e) =>
+                      setEmail(e.target.value)
+                    }
+                  />
+
+                  <Button
+                    type="submit"
+                    variant="accent"
+                    size="lg"
+                    className="min-h-[54px] w-full rounded-xl font-semibold"
+                    disabled={busy}
+                  >
+                    {busy
+                      ? "Sending..."
+                      : "Send OTP"}
+                  </Button>
+                </form>
+              )}
+
+              {step === "otp" && (
+                <form
+                  onSubmit={handleVerifyOtp}
+                  className="space-y-7"
+                >
+                  <Input
+                    id="otp"
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={6}
+                    label="Verification code"
+                    placeholder="123456"
+                    required
+                    value={otp}
+                    onChange={(e) =>
+                      setOtp(
+                        e.target.value
+                          .replace(/\D/g, "")
+                          .slice(0, 6)
+                      )
+                    }
+                  />
+
+                  <Button
+                    type="submit"
+                    variant="accent"
+                    size="lg"
+                    className="min-h-[54px] w-full rounded-xl font-semibold"
+                    disabled={busy}
+                  >
+                    {busy
+                      ? "Verifying..."
+                      : "Verify OTP"}
+                  </Button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setStep("email");
+                      setOtp("");
+                      setError("");
+                      setMessage("");
+                    }}
+                    className="
+                      w-full
+                      text-sm
+                      font-semibold
+                      text-ink
+                      hover:text-marigold
+                    "
+                  >
+                    Change email
+                  </button>
+                </form>
+              )}
+
+              {step === "password" && (
+                <form
+                  onSubmit={handleResetPassword}
+                  className="space-y-7"
+                >
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={
+                        showPassword
+                          ? "text"
+                          : "password"
+                      }
+                      label="New password"
+                      required
+                      value={password}
+                      onChange={(e) =>
+                        setPassword(e.target.value)
+                      }
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShowPassword(
+                          (prev) => !prev
+                        )
+                      }
+                      className="
+                        absolute
+                        right-3
+                        top-[38px]
+                        rounded-md
+                        p-1
+                        text-ink-faint
+                        hover:text-ink
+                      "
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
+
+                  <div className="relative">
+                    <Input
+                      id="confirmPassword"
+                      type={
+                        showConfirmPassword
+                          ? "text"
+                          : "password"
+                      }
+                      label="Confirm new password"
+                      required
+                      value={confirmPassword}
+                      onChange={(e) =>
+                        setConfirmPassword(
+                          e.target.value
+                        )
+                      }
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShowConfirmPassword(
+                          (prev) => !prev
+                        )
+                      }
+                      className="
+                        absolute
+                        right-3
+                        top-[38px]
+                        rounded-md
+                        p-1
+                        text-ink-faint
+                        hover:text-ink
+                      "
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    variant="accent"
+                    size="lg"
+                    className="min-h-[54px] w-full rounded-xl font-semibold"
+                    disabled={busy}
+                  >
+                    {busy
+                      ? "Resetting..."
+                      : "Reset password"}
+                  </Button>
+                </form>
+              )}
             </div>
 
-            {/* Bottom */}
             <div
               className="
                 border-t
@@ -200,7 +462,6 @@ export default function ForgotPassword() {
                   text-sm
                   font-semibold
                   text-ink
-                  transition-colors
                   hover:text-marigold
                 "
               >
@@ -209,18 +470,11 @@ export default function ForgotPassword() {
             </div>
           </Card>
 
-          {/* Register */}
           <p className="mt-7 text-center text-sm text-ink-soft">
             Don't have an account?{" "}
             <Link
               to="/register"
-              className="
-                ml-1
-                font-semibold
-                text-ink
-                transition-colors
-                hover:text-marigold
-              "
+              className="ml-1 font-semibold text-ink hover:text-marigold"
             >
               Create one
             </Link>
@@ -230,4 +484,3 @@ export default function ForgotPassword() {
     </div>
   );
 }
-

@@ -119,7 +119,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
   if (!email) {
-    throw new ApiError(400, 'Email is required.');
+    throw new ApiError(400, "Email is required.");
   }
 
   const normalizedEmail = email.toLowerCase().trim();
@@ -128,99 +128,237 @@ export const forgotPassword = asyncHandler(async (req, res) => {
     email: normalizedEmail,
   });
 
-  // Return an error if the email is not registered.
   if (!user) {
     throw new ApiError(
       404,
-      'No SewaPath account is registered with this email.'
+      "No SewaPath account is registered with this email."
     );
   }
 
-  // Generate a secure random token.
-  const resetToken = crypto.randomBytes(32).toString('hex');
+  // Generate 6-digit OTP
+  const otp = crypto
+    .randomInt(100000, 1000000)
+    .toString();
 
-  // Store only the hash in the database.
-  const resetTokenHash = crypto
-    .createHash('sha256')
-    .update(resetToken)
-    .digest('hex');
+  // Hash OTP before storing it
+  const otpHash = crypto
+    .createHash("sha256")
+    .update(otp)
+    .digest("hex");
 
-  user.resetPasswordTokenHash = resetTokenHash;
+  user.passwordResetOtpHash = otpHash;
 
-  // Token expires after 15 minutes.
-  user.resetPasswordExpiresAt = new Date(
-    Date.now() + 15 * 60 * 1000
+  // OTP expires after 10 minutes
+  user.passwordResetOtpExpiresAt = new Date(
+    Date.now() + 10 * 60 * 1000
   );
+
+  // Reset attempt counter
+  user.passwordResetOtpAttempts = 0;
+
+  // Clear any previous verified reset session
+  user.passwordResetVerifiedTokenHash = null;
+  user.passwordResetVerifiedExpiresAt = null;
 
   await user.save();
 
-  // URL sent to the user's email.
-  const resetUrl =
-    `${process.env.CLIENT_ORIGIN}/reset-password/${resetToken}`;
-
-  // Send password reset email to the registered email.
+  // Send OTP email
   await sendPasswordResetEmail({
     email: user.email,
     name: user.name,
-    resetUrl,
+    otp,
   });
 
   return res.json({
     success: true,
-    message: 'Password reset link has been sent to your email.',
+    message: "A verification code has been sent to your email.",
   });
 });
 
-export const resetPassword = asyncHandler(async (req, res) => {
-  const { token } = req.params;
-  const { password } = req.body;
 
-  if (!token) {
-    throw new ApiError(400, 'Reset token is required.');
+export const verifyPasswordResetOtp = asyncHandler(
+  async (req, res) => {
+    const { email, otp } = req.body;
+
+    if (!email) {
+      throw new ApiError(400, "Email is required.");
+    }
+
+    if (!otp) {
+      throw new ApiError(400, "OTP is required.");
+    }
+
+    if (!/^\d{6}$/.test(otp)) {
+      throw new ApiError(
+        400,
+        "OTP must be a 6-digit number."
+      );
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+
+    const user = await User.findOne({
+      email: normalizedEmail,
+    });
+
+    if (!user) {
+      throw new ApiError(
+        404,
+        "No SewaPath account is registered with this email."
+      );
+    }
+
+    // Check whether OTP exists
+    if (
+      !user.passwordResetOtpHash ||
+      !user.passwordResetOtpExpiresAt
+    ) {
+      throw new ApiError(
+        400,
+        "No active OTP found. Please request a new OTP."
+      );
+    }
+
+    // Check expiration
+    if (
+      user.passwordResetOtpExpiresAt.getTime() <
+      Date.now()
+    ) {
+      user.passwordResetOtpHash = null;
+      user.passwordResetOtpExpiresAt = null;
+      user.passwordResetOtpAttempts = 0;
+
+      await user.save();
+
+      throw new ApiError(
+        400,
+        "OTP has expired. Please request a new OTP."
+      );
+    }
+
+    // Maximum attempts
+    if (user.passwordResetOtpAttempts >= 5) {
+      throw new ApiError(
+        429,
+        "Too many incorrect attempts. Please request a new OTP."
+      );
+    }
+
+    // Hash submitted OTP
+    const otpHash = crypto
+      .createHash("sha256")
+      .update(otp)
+      .digest("hex");
+
+    // Check OTP
+    if (otpHash !== user.passwordResetOtpHash) {
+      user.passwordResetOtpAttempts += 1;
+
+      await user.save();
+
+      throw new ApiError(
+        400,
+        "Invalid OTP."
+      );
+    }
+
+    // OTP is correct.
+    // Create temporary reset token.
+    const resetToken = crypto
+      .randomBytes(32)
+      .toString("hex");
+
+    const resetTokenHash = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+
+    user.passwordResetVerifiedTokenHash = resetTokenHash;
+
+    // Reset token valid for 15 minutes
+    user.passwordResetVerifiedExpiresAt = new Date(
+      Date.now() + 15 * 60 * 1000
+    );
+
+    // OTP can no longer be reused
+    user.passwordResetOtpHash = null;
+    user.passwordResetOtpExpiresAt = null;
+    user.passwordResetOtpAttempts = 0;
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "OTP verified successfully.",
+      resetToken,
+    });
+  }
+);
+
+
+export const resetPassword = asyncHandler(async (req, res) => {
+  const { resetToken, password } = req.body;
+
+  if (!resetToken) {
+    throw new ApiError(
+      400,
+      "Password reset verification is required."
+    );
   }
 
   if (!password) {
-    throw new ApiError(400, 'New password is required.');
+    throw new ApiError(
+      400,
+      "New password is required."
+    );
   }
 
   if (password.length < 6) {
     throw new ApiError(
       400,
-      'Password must be at least 6 characters.'
+      "Password must be at least 6 characters."
     );
   }
 
-  // Hash the token received from the URL.
+  // Hash reset token
   const resetTokenHash = crypto
-    .createHash('sha256')
-    .update(token)
-    .digest('hex');
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
 
-  // Find the user with a matching token that has not expired.
   const user = await User.findOne({
-    resetPasswordTokenHash: resetTokenHash,
-    resetPasswordExpiresAt: { $gt: new Date() },
+    passwordResetVerifiedTokenHash: resetTokenHash,
+    passwordResetVerifiedExpiresAt: {
+      $gt: new Date(),
+    },
   });
 
   if (!user) {
     throw new ApiError(
       400,
-      'Invalid or expired password reset token.'
+      "Invalid or expired password reset session."
     );
   }
 
-  // Hash the new password.
-  user.passwordHash = await bcrypt.hash(password, 10);
+  // Update password
+  user.passwordHash = await bcrypt.hash(
+    password,
+    10
+  );
 
-  // Remove the reset token so it cannot be reused.
-  user.resetPasswordTokenHash = undefined;
-  user.resetPasswordExpiresAt = undefined;
+  // Clear reset data
+  user.passwordResetOtpHash = null;
+  user.passwordResetOtpExpiresAt = null;
+  user.passwordResetOtpAttempts = 0;
+
+  user.passwordResetVerifiedTokenHash = null;
+  user.passwordResetVerifiedExpiresAt = null;
 
   await user.save();
 
   res.json({
     success: true,
-    message: 'Password has been reset successfully.',
+    message: "Password has been reset successfully.",
   });
 });
 

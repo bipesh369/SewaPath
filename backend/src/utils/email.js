@@ -18,23 +18,23 @@ const transporter = nodemailer.createTransport({
 export async function sendPasswordResetEmail({
   email,
   name,
-  resetUrl,
+  otp,
 }) {
   try {
     const info = await transporter.sendMail({
       from: `"SewaPath" <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: 'Reset your SewaPath password',
+      subject: "Your SewaPath password reset OTP",
 
       text: `Hi ${name},
 
 We received a request to reset your SewaPath password.
 
-Reset your password here:
+Your verification code is:
 
-${resetUrl}
+${otp}
 
-This link will expire in 15 minutes.
+This OTP will expire in 10 minutes.
 
 If you did not request a password reset, you can safely ignore this email.
 
@@ -59,25 +59,29 @@ SewaPath`,
           </p>
 
           <p>
-            <a
-              href="${resetUrl}"
-              style="
-                display: inline-block;
-                padding: 12px 20px;
-                background: #e0a72e;
-                color: #0f172a;
-                text-decoration: none;
-                border-radius: 8px;
-                font-weight: 600;
-              "
-            >
-              Reset password
-            </a>
+            Your verification code is:
           </p>
 
+          <div
+            style="
+              margin: 24px 0;
+              padding: 18px;
+              background: #f8fafc;
+              border: 1px solid #e2e8f0;
+              border-radius: 12px;
+              text-align: center;
+              font-size: 32px;
+              font-weight: 700;
+              letter-spacing: 8px;
+              color: #0f172a;
+            "
+          >
+            ${otp}
+          </div>
+
           <p>
-            This link will expire in
-            <strong>15 minutes</strong>.
+            This OTP will expire in
+            <strong>10 minutes</strong>.
           </p>
 
           <p>
@@ -90,12 +94,14 @@ SewaPath`,
       `,
     });
 
-    console.log('[email] Password reset email sent');
-    console.log('[email] Message ID:', info.messageId);
+    console.log("[email] Password reset OTP sent");
+    console.log("[email] Message ID:", info.messageId);
 
     return info;
   } catch (error) {
-    console.error('[email] Failed to send password reset email');
+    console.error(
+      "[email] Failed to send password reset OTP"
+    );
     console.error(error);
 
     throw error;

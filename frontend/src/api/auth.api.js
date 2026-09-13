@@ -29,9 +29,22 @@ export const forgotPassword = (email) =>
     auth: false,
   });
 
-export const resetPassword = (token, password) =>
-  apiRequest(`/auth/reset-password/${token}`, {
+export const verifyResetOtp = (email, otp) =>
+  apiRequest("/auth/verify-reset-otp", {
     method: "POST",
-    body: { password },
+    body: {
+      email,
+      otp,
+    },
+    auth: false,
+  });
+
+export const resetPassword = (resetToken, password) =>
+  apiRequest("/auth/reset-password", {
+    method: "POST",
+    body: {
+      resetToken,
+      password,
+    },
     auth: false,
   });
