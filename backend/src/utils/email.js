@@ -1,12 +1,12 @@
 import nodemailer from 'nodemailer';
+import dns from 'node:dns';
+
+dns.setDefaultResultOrder('ipv4first');
 
 const transporter = nodemailer.createTransport({
   host: process.env.MAIL_HOST,
   port: Number(process.env.MAIL_PORT) || 587,
   secure: Number(process.env.MAIL_PORT) === 465,
-
-  // Force IPv4 connection
-  family: 4,
 
   auth: {
     user: process.env.EMAIL_USER,
@@ -20,11 +20,9 @@ export async function sendPasswordResetEmail({
   resetUrl,
 }) {
   try {
-    // Temporary debug log
     console.log('[email] SMTP config:', {
       host: process.env.MAIL_HOST,
       port: process.env.MAIL_PORT,
-      family: 4,
       user: process.env.EMAIL_USER,
     });
 
