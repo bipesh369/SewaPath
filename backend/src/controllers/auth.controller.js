@@ -1,8 +1,6 @@
-
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-
 import User from '../models/user.model.js';
 import { ApiError } from '../utils/apiError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
@@ -130,15 +128,12 @@ export const forgotPassword = asyncHandler(async (req, res) => {
     email: normalizedEmail,
   });
 
-  const message =
-    'If an account exists with this email, you will receive a password reset link.';
-
-  // Do not reveal whether the email exists.
+  // Return an error if the email is not registered.
   if (!user) {
-    return res.json({
-      success: true,
-      message,
-    });
+    throw new ApiError(
+      404,
+      'No SewaPath account is registered with this email.'
+    );
   }
 
   // Generate a secure random token.
@@ -163,7 +158,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
   const resetUrl =
     `${process.env.CLIENT_ORIGIN}/reset-password/${resetToken}`;
 
-  // Send password reset email.
+  // Send password reset email to the registered email.
   await sendPasswordResetEmail({
     email: user.email,
     name: user.name,
@@ -172,7 +167,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
 
   return res.json({
     success: true,
-    message,
+    message: 'Password reset link has been sent to your email.',
   });
 });
 
@@ -229,7 +224,6 @@ export const resetPassword = asyncHandler(async (req, res) => {
   });
 });
 
-
 export const updatePreferredLanguage = asyncHandler(
   async (req, res) => {
     const { preferredLanguage } = req.body;
@@ -247,4 +241,3 @@ export const updatePreferredLanguage = asyncHandler(
     });
   }
 );
-

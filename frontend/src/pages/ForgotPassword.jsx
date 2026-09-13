@@ -1,49 +1,40 @@
 
 import { useState } from "react";
-
 import { Link } from "react-router-dom";
 
-import { useLanguage } from "../i18n/LanguageContext.jsx";
-
 import Card from "../components/ui/Card.jsx";
-
 import { Input } from "../components/ui/Input.jsx";
-
 import Button from "../components/ui/Button.jsx";
-
 import ErrorNotice from "../components/ui/ErrorNotice.jsx";
 
 import * as authApi from "../api/auth.api.js";
 
 export default function ForgotPassword() {
-  const { t } = useLanguage();
-
   const [email, setEmail] = useState("");
-
-  const [error, setError] = useState("");
-
-  const [message, setMessage] = useState("");
-
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setBusy(true);
     setError("");
     setMessage("");
+    setBusy(true);
 
     try {
-      const response = await authApi.forgotPassword(email);
+      const response = await authApi.forgotPassword(email.trim());
 
       setMessage(
         response?.message ||
-          "If an account exists with this email, you will receive a password reset link."
+          "Password reset link has been sent to your email."
       );
-
-      setEmail("");
     } catch (err) {
-      setError(err.message);
+      setError(
+        err?.response?.data?.message ||
+          err?.message ||
+          "Unable to send the password reset link."
+      );
     } finally {
       setBusy(false);
     }
@@ -52,13 +43,11 @@ export default function ForgotPassword() {
   return (
     <div className="relative min-h-[calc(100vh-72px)] overflow-hidden bg-[#fafaf9]">
       {/* ================= PREMIUM BACKGROUND ================= */}
-
       <div
         className="pointer-events-none absolute inset-0"
         aria-hidden="true"
       >
         {/* Warm central glow */}
-
         <div
           className="
             absolute left-1/2 top-[-280px]
@@ -71,7 +60,6 @@ export default function ForgotPassword() {
         />
 
         {/* Subtle top highlight */}
-
         <div
           className="
             absolute inset-x-0 top-0
@@ -81,7 +69,6 @@ export default function ForgotPassword() {
         />
 
         {/* Architectural grid */}
-
         <div
           className="
             absolute inset-0
@@ -93,7 +80,6 @@ export default function ForgotPassword() {
       </div>
 
       {/* ================= FORGOT PASSWORD CONTENT ================= */}
-
       <div
         className="
           relative mx-auto flex
@@ -108,7 +94,6 @@ export default function ForgotPassword() {
       >
         <div className="w-full max-w-[440px]">
           {/* Header */}
-
           <div className="mb-8 text-center">
             <h1
               className="
@@ -129,7 +114,6 @@ export default function ForgotPassword() {
           </div>
 
           {/* ================= CARD ================= */}
-
           <Card
             className="
               overflow-hidden
@@ -143,11 +127,9 @@ export default function ForgotPassword() {
             <div className="px-7 py-10 sm:px-9 sm:py-12">
               <form onSubmit={handleSubmit} className="space-y-7">
                 {/* Error */}
-
                 <ErrorNotice message={error} />
 
                 {/* Success */}
-
                 {message && (
                   <div
                     className="
@@ -168,7 +150,6 @@ export default function ForgotPassword() {
                 )}
 
                 {/* Email */}
-
                 <Input
                   id="email"
                   type="email"
@@ -180,7 +161,6 @@ export default function ForgotPassword() {
                 />
 
                 {/* Submit */}
-
                 <Button
                   type="submit"
                   variant="accent"
@@ -204,7 +184,6 @@ export default function ForgotPassword() {
             </div>
 
             {/* Bottom */}
-
             <div
               className="
                 border-t
@@ -231,7 +210,6 @@ export default function ForgotPassword() {
           </Card>
 
           {/* Register */}
-
           <p className="mt-7 text-center text-sm text-ink-soft">
             Don't have an account?{" "}
             <Link
