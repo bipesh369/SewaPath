@@ -1,18 +1,13 @@
 import nodemailer from "nodemailer";
-import dns from "node:dns";
-
-// Prefer IPv4 on environments such as Render
-dns.setDefaultResultOrder("ipv4first");
 
 const transporter = nodemailer.createTransport({
-  host: process.env.MAIL_HOST,
-  port: Number(process.env.MAIL_PORT),
-  secure: false,
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-  family: 4,
 });
 
 export async function sendPasswordResetEmail({ email, name, otp }) {
@@ -76,8 +71,7 @@ SewaPath`,
           </div>
 
           <p>
-            This OTP will expire in
-            <strong>10 minutes</strong>.
+            This OTP will expire in <strong>10 minutes</strong>.
           </p>
 
           <p>
@@ -97,7 +91,6 @@ SewaPath`,
   } catch (error) {
     console.error("[email] Failed to send password reset OTP");
     console.error(error);
-
     throw error;
   }
 }
